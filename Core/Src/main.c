@@ -87,22 +87,27 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  uint8_t step=0;
+  uint32_t last_time=0;
+  /*HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3,GPIO_PIN_RESET);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
+  {if (HAL_GetTick()-last_time>=500)
   {
-    HAL_GPIO_WritePin(LED0_GPIO_Port, LED2_Pin,GPIO_PIN_RESET );
-    HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin,GPIO_PIN_SET );
-    HAL_Delay(500);
-    HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin,GPIO_PIN_RESET );
-    HAL_GPIO_WritePin(LED0_GPIO_Port, LED1_Pin,GPIO_PIN_SET );
-    HAL_Delay(500);
-    HAL_GPIO_WritePin(LED0_GPIO_Port, LED1_Pin,GPIO_PIN_RESET );
-    HAL_GPIO_WritePin(LED0_GPIO_Port, LED2_Pin,GPIO_PIN_SET );
-    HAL_Delay(500);
+    last_time+=500;
+    HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin|LED1_Pin|LED2_Pin, GPIO_PIN_RESET);
+    switch (step)
+    {
+    case 0:HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);break;
+    case 1:HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);break;
+    case 2:HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);break;
+    }
+    step++;
+    step=step%3;
+  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
